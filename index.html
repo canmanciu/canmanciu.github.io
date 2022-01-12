@@ -145,6 +145,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://canmanciu.github.io/2022/01/12/urlencode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CANMANCIU">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CANMANCIU">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/12/urlencode/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-12 23:17:22 / Modified: 23:17:27" itemprop="dateCreated datePublished" datetime="2022-01-12T23:17:22+08:00">2022-01-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、urlencode-相关的三个协议"><a href="#一、urlencode-相关的三个协议" class="headerlink" title="一、urlencode 相关的三个协议"></a>一、urlencode 相关的三个协议</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://www.ietf.org/rfc/rfc1738.txt">RFC1738</a>: Uniform Resource Locators (URL)</li>
+<li><a target="_blank" rel="noopener" href="https://www.ietf.org/rfc/rfc2396.txt">RFC2396</a>: Uniform Resource Identifiers (URI): Generic Syntax</li>
+<li><a target="_blank" rel="noopener" href="https://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4">W3C HTML4.01</a>: </li>
+</ol>
+<blockquote>
+<p>application/x-www-form-urlencoded<br>This is the default content type. Forms submitted with this content type must be encoded as follows:</p>
+</blockquote>
+<blockquote>
+<p>Control names and values are escaped. Space characters are replaced by <code>+&#39;, and then reserved characters are escaped as described in [RFC1738], section 2.2: Non-alphanumeric characters are replaced by </code>%HH’, a percent sign and two hexadecimal digits representing the ASCII code of the character. Line breaks are represented as “CR LF” pairs (i.e., <code>%0D%0A&#39;). The control names/values are listed in the order they appear in the document. The name is separated from the value by </code>=’ and name/value pairs are separated from each other by `&amp;’.</p>
+</blockquote>
+<h3 id="二、关于-w3c-和-rfc"><a href="#二、关于-w3c-和-rfc" class="headerlink" title="二、关于 w3c 和 rfc"></a>二、关于 w3c 和 rfc</h3><p><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/">RFC</a></p>
+<blockquote>
+<p>contains technical and organizational documents about the Internet, including the specifications and policy documents produced by four streams: the Internet Engineering Task Force (IETF), the Internet Research Task Force (IRTF), the Internet Architecture Board (IAB), and Independent Submissions.</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.w3.org/">W3C</a></p>
+<blockquote>
+<p>The World Wide Web Consortium W3C is an international community that develops open standards to ensure the long-term growth of the Web.</p>
+</blockquote>
+<p>换言之，RFC 标准覆盖的范围覆盖到网络的方方面面，而W3C则是侧重于http、超文本等web技术标准</p>
+<h3 id="三、JAVA-实现"><a href="#三、JAVA-实现" class="headerlink" title="三、JAVA 实现"></a>三、JAVA 实现</h3><p>JAVA 的实现中，URLEncoder 进行编码时会把空格转义成加号 + ，而 URLDecoder 解码时会把加号 + 和 %20 都恢复成空格，文档描述则如下表明，urlencode/decode 是根据 <code>application/x-www-form-urlencoded</code> 格式行编码和解码</p>
+<blockquote>
+<p>Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. This method uses the supplied encoding scheme to obtain the bytes for unsafe characters.<br>Note: The World Wide Web Consortium Recommendation states that UTF-8 should be used. Not doing so may introduce incompatibilities.<br>Decodes a application/x-www-form-urlencoded string using a specific encoding scheme. The supplied encoding is used to determine what characters are represented by any consecutive sequences of the form “%xy”.<br>Note: The World Wide Web Consortium Recommendation states that UTF-8 should be used. Not doing so may introduce incompatibilities.</p>
+</blockquote>
+<p>也就是说，JAVA 中关于 url encode/decode 是根据 W3C 的标准实现的，具体详情可参考：<a target="_blank" rel="noopener" href="https://www.w3.org/TR/html40/appendix/notes.html#non-ascii-chars">Non-ASCII characters in URI attribute values</a></p>
+<p>但在 JAVA 的实现中，还有一个比较有意思的是 URI 类的转义，反而是根据 RFC2396 标准实现的，如下事例中，对空格的转义都转成了 %20</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">URI uri = <span class="keyword">new</span> URI(<span class="string">&quot;http&quot;</span>, <span class="string">&quot;//www.someurl.com/has spaces in url?param a=value b&quot;</span>, <span class="keyword">null</span>);</span><br><span class="line">System.out.println(uri);</span><br><span class="line"></span><br><span class="line">### 输出</span><br><span class="line">http:<span class="comment">//www.someurl.com/has%20spaces%20in%20url?param%20a=value%20b</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://canmanciu.github.io/2022/01/12/base64/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -296,7 +380,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
